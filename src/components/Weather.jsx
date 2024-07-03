@@ -17,7 +17,8 @@ import mist from "./Images/mist.png";
 import Pressure from "./Pressure";
 
 const Weather = () => {
-  let key = "89b2826aa93752a11fb20a951bc28bcb";
+  let key = process.env.REACT_APP_weather_key;
+  console.log(key);
 
   const [city, setcity] = useState("");
   const [myobj, setmyobj] = useState({
@@ -49,6 +50,8 @@ const Weather = () => {
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}`;
     let response = await fetch(url);
     response = await response.json();
+
+    console.log("Response is ", response);
 
     if (parseInt(response.cod) !== 404) {
       let newimage,
