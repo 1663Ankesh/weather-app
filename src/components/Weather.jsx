@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Weather.css";
+import "../App.css";
 import Humidity from "./Humidity";
 import Wind from "./Wind";
 import Coordinate from "./Coordinate";
@@ -15,10 +15,10 @@ import humiditypic from "./Images/humidity.png";
 import wind from "./Images/wind.png";
 import mist from "./Images/mist.png";
 import Pressure from "./Pressure";
+import { tocelcius, tokmph, getWindDirection } from "../utils/functions";
 
 const Weather = () => {
   let key = process.env.REACT_APP_weather_key;
-  console.log(key);
 
   const [city, setcity] = useState("");
   const [myobj, setmyobj] = useState({
@@ -28,6 +28,7 @@ const Weather = () => {
     temp: 0,
     feels_like: 0,
     windspeed: 0,
+    winddirection: "",
     humidity: 0,
     lon: "-",
     lat: "-",
@@ -41,17 +42,11 @@ const Weather = () => {
     });
   }
 
-  function tocelcius(k) {
-    return parseInt((k - 273.15) * 100) / 100;
-  }
-
   async function handleSubmit(e) {
     e.preventDefault();
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}`;
     let response = await fetch(url);
     response = await response.json();
-
-    console.log("Response is ", response);
 
     if (parseInt(response.cod) !== 404) {
       let newimage,
@@ -86,7 +81,8 @@ const Weather = () => {
           image: newimage,
           temp: tocelcius(response.main.temp),
           feels_like: tocelcius(response.main.feels_like),
-          windspeed: response.wind.speed,
+          windspeed: tokmph(response.wind.speed),
+          winddirection: getWindDirection(response.wind.deg),
           humidity: response.main.humidity,
           lon: response.coord.lon,
           lat: response.coord.lat,
@@ -103,6 +99,7 @@ const Weather = () => {
           temp: null,
           feels_like: null,
           windspeed: null,
+          winddirection: "",
           humidity: null,
           lon: null,
           lat: null,
@@ -142,7 +139,7 @@ const Weather = () => {
           cityname={myobj.cityname}
         />
         <div className="info">
-          <Wind img={wind} val={myobj.windspeed} />
+          <Wind img={wind} val={myobj.windspeed} val2={myobj.winddirection} />
           <Humidity img={humiditypic} val={myobj.humidity} />
         </div>
         <div className="info" id="second_info">

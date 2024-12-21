@@ -70,7 +70,7 @@
 }
 .info {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   margin-top: 20px;
   padding-bottom: 10px;
 }
@@ -95,6 +95,7 @@
 #second_info .element .data {
   text-align: center;
 }
+
 @media screen and (max-width: 768px) {
   .weather {
     width: 100%;
